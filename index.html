@@ -67,12 +67,12 @@
       border-bottom: none;
       top: -50%;
       transform-origin: bottom;
-      transform: rotateX(180deg); /* Fermé par défaut */
+      transform: rotateX(180deg);
       z-index: 2;
-      transition: transform 1.5s ease-in-out; /* Ralentissement à 1.5s */
+      transition: transform 1.5s ease-in-out;
     }
     .envelope.open .envelope-flap {
-      transform: rotateX(0deg); /* Ouvert avec un angle naturel */
+      transform: rotateX(0deg);
     }
     .envelope-front {
       position: absolute;
@@ -80,7 +80,7 @@
       height: 100%;
       background: rgba(255, 255, 255, 0.9);
       z-index: 3;
-      transition: transform 1.2s ease-in-out 0.6s, opacity 1.2s ease-in-out 0.6s; /* Ralentissement à 1.2s avec décalage */
+      transition: transform 1.2s ease-in-out 0.6s, opacity 1.2s ease-in-out 0.6s;
       transform: translateY(0);
     }
     .envelope.open .envelope-front {
@@ -124,11 +124,12 @@
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 1.8em; /* Réduit légèrement pour la longueur du texte */
       color: #e07a9c;
       margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
     }
     img {
       width: 100%;
@@ -157,7 +158,7 @@
         padding: 20px;
       }
       h1 {
-        font-size: 2em;
+        font-size: 1.4em; /* Ajusté pour petits écrans */
       }
       .info {
         font-size: 1em;
@@ -182,7 +183,7 @@
     </div>
   </div>
   <div class="card" id="card">
-    <h1>Bienvenue à [Prénom]</h1>
+    <h1>Jennifer et Fabien sont heureux de vous annoncer l'arrivée de [Prénom] dans notre vie</h1>
     <img src="image.jpg" alt="Bébé mignon">
     <div class="info">
       <p><span>📅</span> Née le [Date de naissance]</p>
@@ -197,11 +198,11 @@
     const card = document.getElementById('card');
 
     envelope.addEventListener('click', () => {
-      envelope.classList.add('open'); // Déclenche l'ouverture
+      envelope.classList.add('open');
       setTimeout(() => {
-        envelope.classList.add('hidden'); // Cache l'enveloppe
-        card.classList.add('visible');    // Montre la carte
-      }, 1800); // Délai ajusté pour correspondre aux transitions plus lentes
+        envelope.classList.add('hidden');
+        card.classList.add('visible');
+      }, 1800);
     });
   </script>
 </body>
