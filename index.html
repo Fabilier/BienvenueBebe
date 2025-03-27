@@ -20,6 +20,26 @@
       align-items: center;
       padding: 20px;
       overflow: hidden;
+      position: relative;
+    }
+
+    /* Étoiles animées */
+    .star {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0;
+      z-index: 0;
+      animation: twinkle 4s infinite;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0; transform: scale(0.5); }
+      20% { opacity: 1; transform: scale(1.2); }
+      40% { opacity: 0.8; transform: scale(1); }
+      60% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0; transform: scale(0.5); }
     }
 
     /* Conteneur de l'enveloppe */
@@ -48,9 +68,9 @@
       width: 300px;
       height: 200px;
       perspective: 1000px;
-      display: flex; /* Ajout pour centrage */
-      justify-content: center; /* Centrage horizontal */
-      align-items: center; /* Centrage vertical */
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .envelope-back {
       position: absolute;
@@ -101,7 +121,7 @@
       font-weight: bold;
       opacity: 0;
       transition: opacity 0.3s ease;
-      width: 100%; /* Assure que le texte reste dans les limites */
+      width: 100%;
     }
     .envelope-text.active {
       opacity: 1;
@@ -119,6 +139,7 @@
       opacity: 0;
       pointer-events: none;
       text-align: center;
+      z-index: 5;
     }
     .card.visible {
       opacity: 1;
@@ -201,6 +222,16 @@
   </style>
 </head>
 <body>
+  <!-- Étoiles dans le fond -->
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+  <div class="star"></div>
+
   <div class="envelope" id="envelope">
     <div class="envelope-wrapper">
       <div class="envelope-back"></div>
@@ -212,7 +243,6 @@
       <div class="envelope-text" id="step4">L'arrivée</div>
       <div class="envelope-text" id="step5">D'un petit ange</div>
       <div class="envelope-text" id="step6">Dans leur vie</div>
-      <div class="envelope-text" id="step7">D'une petite</div>
     </div>
   </div>
   <div class="card" id="card">
@@ -235,28 +265,49 @@
       document.getElementById('step3'),
       document.getElementById('step4'),
       document.getElementById('step5'),
-      document.getElementById('step6'),
-      document.getElementById('step7')
+      document.getElementById('step6')
     ];
     let clickCount = 0;
 
-    // Afficher le premier texte au départ
-    steps[0].classList.add('active');
+    // Fonction pour positionner les étoiles aléatoirement
+    function positionStars() {
+      const stars = document.querySelectorAll('.star');
+      stars.forEach(star => {
+        const top = Math.random() * 90 + 5; // Entre 5% et 95%
+        const left = Math.random() * 90 + 5; // Entre 5% et 95%
+        const delay = Math.random() * 3; // Délai entre 0 et 3s
+        star.style.top = `${top}%`;
+        star.style.left = `${left}%`;
+        star.style.animationDelay = `${delay}s`;
+      });
+    }
+
+    // Positionner les étoiles au chargement et toutes les 4s
+    positionStars();
+    setInterval(positionStars, 4000); // Réinitialise les positions toutes les 4s
 
     envelope.addEventListener('click', () => {
       clickCount++;
 
-      if (clickCount <= steps.length) {
-        // Cacher le texte précédent
-        if (clickCount > 1) {
-          steps[clickCount - 2].classList.remove('active');
-        }
-        // Afficher le texte actuel
-        steps[clickCount - 1].classList.add('active');
+      if (clickCount === 1) {
+        // Premier clic : rien ne se passe encore
+        return;
       }
 
-      if (clickCount === steps.length) {
-        // Après le dernier clic, ouvrir l'enveloppe
+      if (clickCount <= steps.length + 1) { // +1 car le 1er clic ne compte pas
+        const stepIndex = clickCount - 2; // Ajustement pour commencer à 0 après 2 clics
+        if (stepIndex >= 0) {
+          // Cacher le texte précédent
+          if (stepIndex > 0) {
+            steps[stepIndex - 1].classList.remove('active');
+          }
+          // Afficher le texte actuel
+          steps[stepIndex].classList.add('active');
+        }
+      }
+
+      if (clickCount === steps.length + 1) {
+        // Après le dernier clic (6e étape + 1), ouvrir l'enveloppe
         setTimeout(() => {
           envelope.classList.add('open');
           setTimeout(() => {
