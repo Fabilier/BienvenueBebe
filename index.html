@@ -19,7 +19,74 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      overflow: hidden;
     }
+
+    /* Conteneur de l'enveloppe */
+    .envelope {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f5e8e8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      animation: fadeOut 0.5s ease 2.5s forwards;
+    }
+
+    /* Structure de l'enveloppe */
+    .envelope-wrapper {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      perspective: 1000px;
+    }
+    .envelope-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border: 2px solid #e07a9c;
+      border-radius: 5px;
+      z-index: 1;
+    }
+    .envelope-flap {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      background: #fff;
+      border: 2px solid #e07a9c;
+      border-bottom: none;
+      top: -50%;
+      transform-origin: bottom;
+      transform: rotateX(180deg);
+      z-index: 2;
+      animation: openFlap 1.5s ease forwards;
+    }
+    @keyframes openFlap {
+      0% { transform: rotateX(180deg); }
+      70% { transform: rotateX(0deg); }
+      100% { transform: rotateX(-10deg) translateY(-100%); }
+    }
+    .envelope-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 3;
+      animation: slideUp 1s ease 1.5s forwards;
+    }
+    @keyframes slideUp {
+      to { transform: translateY(-150%); opacity: 0; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* Carte */
     .card {
       background: white;
       border-radius: 15px;
@@ -28,11 +95,17 @@
       width: 100%;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 0.5s ease 2.5s forwards;
     }
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
     h1 {
       font-size: 2.5em;
       color: #e07a9c;
@@ -61,6 +134,7 @@
     .info p::before {
       font-size: 1.3em;
     }
+
     @media (max-width: 480px) {
       .card {
         padding: 20px;
@@ -71,19 +145,24 @@
       .info {
         font-size: 1em;
       }
+      .envelope-wrapper {
+        width: 200px;
+        height: 150px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="envelope">
+    <div class="envelope-wrapper">
+      <div class="envelope-back"></div>
+      <div class="envelope-flap"></div>
+      <div class="envelope-front"></div>
+    </div>
+  </div>
   <div class="card">
     <h1>Bienvenue à [Prénom]</h1>
     <img src="image.jpg" alt="Bébé mignon">
     <div class="info">
       <p><span>📅</span> Née le [Date de naissance]</p>
-      <p><span>🕒</span> à [Heure]</p>
-      <p><span>⚖️</span> Poids : [Poids] kg</p>
-      <p><span>📏</span> Taille : [Taille] cm</p>
-    </div>
-  </div>
-</body>
-</html>
+      <p><span>🕒</span> à [Heure]</p
