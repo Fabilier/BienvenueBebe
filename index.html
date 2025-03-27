@@ -23,17 +23,17 @@
       position: relative;
     }
 
-    /* Étoiles animées */
+    /* Étoiles visuelles (vraies étoiles ✨) */
     .star {
       position: absolute;
-      width: 5px;
-      height: 5px;
-      background: #fff;
-      border-radius: 50%;
+      font-size: 1.2em;
+      color: #fff;
       opacity: 0;
-      z-index: 0;
       animation: twinkle 4s infinite;
+      z-index: 0;
+      pointer-events: none;
     }
+
     @keyframes twinkle {
       0% { opacity: 0; transform: scale(0.5); }
       20% { opacity: 1; transform: scale(1.2); }
@@ -115,13 +115,13 @@
     .envelope-text {
       position: absolute;
       z-index: 4;
-      font-size: clamp(1.4em, 4vw, 2em);
+      font-size: clamp(1.4em, 4vw, 1.8em);
       color: #e07a9c;
       text-align: center;
       font-weight: bold;
       opacity: 0;
       transition: opacity 0.3s ease;
-      width: 100%;
+      width: 90%;
     }
     .envelope-text.active {
       opacity: 1;
@@ -206,14 +206,7 @@
 <body>
 
   <!-- Étoiles -->
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
-  <div class="star"></div>
+  <div id="stars"></div>
 
   <!-- Enveloppe -->
   <div class="envelope" id="envelope" role="button" aria-label="Ouvrir l'enveloppe" tabindex="0">
@@ -221,12 +214,18 @@
       <div class="envelope-back"></div>
       <div class="envelope-flap"></div>
       <div class="envelope-front" id="envelopeFront"></div>
-      <div class="envelope-text" id="step1">Jennifer et Fabien</div>
-      <div class="envelope-text" id="step2">Sont heureux</div>
-      <div class="envelope-text" id="step3">De vous annoncer</div>
-      <div class="envelope-text" id="step4">L'arrivée</div>
-      <div class="envelope-text" id="step5">D'un petit ange</div>
-      <div class="envelope-text" id="step6">Dans leur vie</div>
+
+      <!-- Étapes personnalisées -->
+      <div class="envelope-text">Jennifer et Fabien</div>
+      <div class="envelope-text">Vous annoncent une merveilleuse nouvelle...</div>
+      <div class="envelope-text">Le plus beau jour de notre vie est arrivé...</div>
+      <div class="envelope-text">Un petit ange est né ♥</div>
+      <div class="envelope-text">Elle a pointé le bout de son nez...</div>
+      <div class="envelope-text">Toute petite mais déjà tellement aimée...</div>
+      <div class="envelope-text">Ses petits pieds ont déjà envahi notre cœur...</div>
+      <div class="envelope-text">Nous sommes sous le charme...</div>
+      <div class="envelope-text">Son prénom est aussi doux qu'elle...</div>
+      <div class="envelope-text">Bienvenue à...</div>
     </div>
   </div>
 
@@ -242,7 +241,6 @@
     </div>
   </div>
 
-  <!-- Script -->
   <script>
     const envelope = document.getElementById('envelope');
     const card = document.getElementById('card');
@@ -250,16 +248,23 @@
     const envelopeFront = document.getElementById('envelopeFront');
     let clickCount = 0;
 
-    function positionStars() {
-      document.querySelectorAll('.star').forEach(star => {
-        star.style.top = `${Math.random() * 90 + 5}%`;
-        star.style.left = `${Math.random() * 90 + 5}%`;
-        star.style.animationDelay = `${Math.random() * 3}s`;
-      });
-    }
-
+    // Affichage progressif des phrases
     function showStep(index) {
       steps.forEach((el, i) => el.classList.toggle('active', i === index));
+    }
+
+    // Animation étoiles ✨
+    function generateStars(count = 40) {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.textContent = '✨';
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 4}s`;
+        container.appendChild(star);
+      }
     }
 
     envelope.addEventListener('click', () => {
@@ -285,8 +290,7 @@
       }
     });
 
-    positionStars();
-    setInterval(positionStars, 4000);
+    generateStars();
   </script>
 </body>
 </html>
