@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Annonce de [Prénom]</title>
   <style>
     * {
@@ -42,7 +42,7 @@
       100% { opacity: 0; transform: scale(0.5); }
     }
 
-    /* Conteneur de l'enveloppe */
+    /* Enveloppe */
     .envelope {
       position: fixed;
       top: 0;
@@ -61,8 +61,6 @@
       opacity: 0;
       visibility: hidden;
     }
-
-    /* Structure de l'enveloppe */
     .envelope-wrapper {
       position: relative;
       width: 300px;
@@ -110,12 +108,14 @@
       transform: translateY(-120%);
       opacity: 0;
     }
+    .envelope-front.removed {
+      display: none;
+    }
 
-    /* Texte progressif */
     .envelope-text {
       position: absolute;
       z-index: 4;
-      font-size: 1.8em;
+      font-size: clamp(1.4em, 4vw, 2em);
       color: #e07a9c;
       text-align: center;
       font-weight: bold;
@@ -156,6 +156,7 @@
       margin-bottom: 20px;
       letter-spacing: 1px;
     }
+
     img {
       width: 100%;
       max-height: 300px;
@@ -163,10 +164,12 @@
       border-radius: 10px;
       margin-bottom: 25px;
     }
+
     .info {
       font-size: 1.2em;
       line-height: 1.6;
     }
+
     .info p {
       margin: 10px 0;
       display: flex;
@@ -177,29 +180,11 @@
       transform: translateY(20px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .card.visible .info p:nth-child(1) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 0.2s;
-    }
-    .card.visible .info p:nth-child(2) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 0.4s;
-    }
-    .card.visible .info p:nth-child(3) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 0.6s;
-    }
-    .card.visible .info p:nth-child(4) {
-      opacity: 1;
-      transform: translateY(0);
-      transition-delay: 0.8s;
-    }
-    .info p::before {
-      font-size: 1.3em;
-    }
+
+    .card.visible .info p:nth-child(1) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    .card.visible .info p:nth-child(2) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+    .card.visible .info p:nth-child(3) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+    .card.visible .info p:nth-child(4) { transition-delay: 0.8s; opacity: 1; transform: translateY(0); }
 
     @media (max-width: 480px) {
       .card {
@@ -215,14 +200,12 @@
         width: 200px;
         height: 150px;
       }
-      .envelope-text {
-        font-size: 1.4em;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Étoiles dans le fond -->
+
+  <!-- Étoiles -->
   <div class="star"></div>
   <div class="star"></div>
   <div class="star"></div>
@@ -232,11 +215,12 @@
   <div class="star"></div>
   <div class="star"></div>
 
-  <div class="envelope" id="envelope">
+  <!-- Enveloppe -->
+  <div class="envelope" id="envelope" role="button" aria-label="Ouvrir l'enveloppe" tabindex="0">
     <div class="envelope-wrapper">
       <div class="envelope-back"></div>
       <div class="envelope-flap"></div>
-      <div class="envelope-front"></div>
+      <div class="envelope-front" id="envelopeFront"></div>
       <div class="envelope-text" id="step1">Jennifer et Fabien</div>
       <div class="envelope-text" id="step2">Sont heureux</div>
       <div class="envelope-text" id="step3">De vous annoncer</div>
@@ -245,9 +229,11 @@
       <div class="envelope-text" id="step6">Dans leur vie</div>
     </div>
   </div>
+
+  <!-- Carte de naissance -->
   <div class="card" id="card">
     <h1>[Prénom]</h1>
-    <img src="image.jpg" alt="Bébé mignon">
+    <img src="image.jpg" alt="Photo du bébé [Prénom]">
     <div class="info">
       <p><span>📅</span> Née le [Date de naissance]</p>
       <p><span>🕒</span> à [Heure]</p>
@@ -256,67 +242,51 @@
     </div>
   </div>
 
+  <!-- Script -->
   <script>
     const envelope = document.getElementById('envelope');
     const card = document.getElementById('card');
-    const steps = [
-      document.getElementById('step1'),
-      document.getElementById('step2'),
-      document.getElementById('step3'),
-      document.getElementById('step4'),
-      document.getElementById('step5'),
-      document.getElementById('step6')
-    ];
+    const steps = Array.from(document.querySelectorAll('.envelope-text'));
+    const envelopeFront = document.getElementById('envelopeFront');
     let clickCount = 0;
 
-    // Fonction pour positionner les étoiles aléatoirement
     function positionStars() {
-      const stars = document.querySelectorAll('.star');
-      stars.forEach(star => {
-        const top = Math.random() * 90 + 5; // Entre 5% et 95%
-        const left = Math.random() * 90 + 5; // Entre 5% et 95%
-        const delay = Math.random() * 3; // Délai entre 0 et 3s
-        star.style.top = `${top}%`;
-        star.style.left = `${left}%`;
-        star.style.animationDelay = `${delay}s`;
+      document.querySelectorAll('.star').forEach(star => {
+        star.style.top = `${Math.random() * 90 + 5}%`;
+        star.style.left = `${Math.random() * 90 + 5}%`;
+        star.style.animationDelay = `${Math.random() * 3}s`;
       });
     }
 
-    // Positionner les étoiles au chargement et toutes les 4s
-    positionStars();
-    setInterval(positionStars, 4000); // Réinitialise les positions toutes les 4s
+    function showStep(index) {
+      steps.forEach((el, i) => el.classList.toggle('active', i === index));
+    }
 
     envelope.addEventListener('click', () => {
       clickCount++;
 
-      if (clickCount === 1) {
-        // Premier clic : rien ne se passe encore
-        return;
-      }
+      if (clickCount === 1) return;
 
-      if (clickCount <= steps.length + 1) { // +1 car le 1er clic ne compte pas
-        const stepIndex = clickCount - 2; // Ajustement pour commencer à 0 après 2 clics
-        if (stepIndex >= 0) {
-          // Cacher le texte précédent
-          if (stepIndex > 0) {
-            steps[stepIndex - 1].classList.remove('active');
-          }
-          // Afficher le texte actuel
-          steps[stepIndex].classList.add('active');
-        }
+      const stepIndex = clickCount - 2;
+
+      if (stepIndex >= 0 && stepIndex < steps.length) {
+        showStep(stepIndex);
       }
 
       if (clickCount === steps.length + 1) {
-        // Après le dernier clic (6e étape + 1), ouvrir l'enveloppe
         setTimeout(() => {
           envelope.classList.add('open');
           setTimeout(() => {
             envelope.classList.add('hidden');
+            envelopeFront.classList.add('removed');
             card.classList.add('visible');
-          }, 1800); // Délai pour l'animation de l'enveloppe
-        }, 500); // Petite pause avant l'ouverture
+          }, 1800);
+        }, 500);
       }
     });
+
+    positionStars();
+    setInterval(positionStars, 4000);
   </script>
 </body>
 </html>
