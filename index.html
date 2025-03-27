@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenue à [Prénom]</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #fff6f9, #ffe6ec);
+      color: #444;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      max-width: 550px;
+      width: 100%;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #e07a9c;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+    .info {
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+    .info p {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .info p::before {
+      font-size: 1.3em;
+    }
+    @media (max-width: 480px) {
+      .card {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .info {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Bienvenue à [Prénom]</h1>
+    <img src="image.jpg" alt="Bébé mignon">
+    <div class="info">
+      <p><span>📅</span> Née le [Date de naissance]</p>
+      <p><span>🕒</span> à [Heure]</p>
+      <p><span>⚖️</span> Poids : [Poids] kg</p>
+      <p><span>📏</span> Taille : [Taille] cm</p>
+    </div>
+  </div>
+</body>
+</html>
