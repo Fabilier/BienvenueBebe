@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenue à [Prénom]</title>
+  <title>Annonce de [Prénom]</title>
   <style>
     * {
       margin: 0;
@@ -88,18 +88,19 @@
       opacity: 0;
     }
 
-    /* Texte "Si tu es curieux, clique ici" */
+    /* Texte progressif */
     .envelope-text {
       position: absolute;
       z-index: 4;
-      font-size: 1.5em;
+      font-size: 1.8em;
       color: #e07a9c;
       text-align: center;
       font-weight: bold;
+      opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .envelope.open .envelope-text {
-      opacity: 0;
+    .envelope-text.active {
+      opacity: 1;
     }
 
     /* Carte */
@@ -113,6 +114,7 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
       opacity: 0;
       pointer-events: none;
+      text-align: center;
     }
     .card.visible {
       opacity: 1;
@@ -124,12 +126,10 @@
     }
 
     h1 {
-      font-size: 1.8em; /* Réduit légèrement pour la longueur du texte */
+      font-size: 2.5em;
       color: #e07a9c;
       margin-bottom: 20px;
-      text-align: center;
-      line-height: 1.4;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
     img {
       width: 100%;
@@ -158,7 +158,7 @@
         padding: 20px;
       }
       h1 {
-        font-size: 1.4em; /* Ajusté pour petits écrans */
+        font-size: 2em;
       }
       .info {
         font-size: 1em;
@@ -168,7 +168,7 @@
         height: 150px;
       }
       .envelope-text {
-        font-size: 1.2em;
+        font-size: 1.4em;
       }
     }
   </style>
@@ -179,11 +179,17 @@
       <div class="envelope-back"></div>
       <div class="envelope-flap"></div>
       <div class="envelope-front"></div>
-      <div class="envelope-text">Si tu es curieux, clique ici</div>
+      <div class="envelope-text" id="step1">Jennifer et Fabien</div>
+      <div class="envelope-text" id="step2">Sont heureux</div>
+      <div class="envelope-text" id="step3">De vous annoncer</div>
+      <div class="envelope-text" id="step4">L'arrivée</div>
+      <div class="envelope-text" id="step5">D'un petit ange</div>
+      <div class="envelope-text" id="step6">Dans leur vie</div>
+      <div class="envelope-text" id="step7">D'une petite</div>
     </div>
   </div>
   <div class="card" id="card">
-    <h1>Jennifer et Fabien sont heureux de vous annoncer l'arrivée de [Prénom] dans notre vie</h1>
+    <h1>[Prénom]</h1>
     <img src="image.jpg" alt="Bébé mignon">
     <div class="info">
       <p><span>📅</span> Née le [Date de naissance]</p>
@@ -196,13 +202,42 @@
   <script>
     const envelope = document.getElementById('envelope');
     const card = document.getElementById('card');
+    const steps = [
+      document.getElementById('step1'),
+      document.getElementById('step2'),
+      document.getElementById('step3'),
+      document.getElementById('step4'),
+      document.getElementById('step5'),
+      document.getElementById('step6'),
+      document.getElementById('step7')
+    ];
+    let clickCount = 0;
+
+    // Afficher le premier texte au départ
+    steps[0].classList.add('active');
 
     envelope.addEventListener('click', () => {
-      envelope.classList.add('open');
-      setTimeout(() => {
-        envelope.classList.add('hidden');
-        card.classList.add('visible');
-      }, 1800);
+      clickCount++;
+
+      if (clickCount <= steps.length) {
+        // Cacher le texte précédent
+        if (clickCount > 1) {
+          steps[clickCount - 2].classList.remove('active');
+        }
+        // Afficher le texte actuel
+        steps[clickCount - 1].classList.add('active');
+      }
+
+      if (clickCount === steps.length) {
+        // Après le dernier clic, ouvrir l'enveloppe
+        setTimeout(() => {
+          envelope.classList.add('open');
+          setTimeout(() => {
+            envelope.classList.add('hidden');
+            card.classList.add('visible');
+          }, 1800); // Délai pour l'animation de l'enveloppe
+        }, 500); // Petite pause avant l'ouverture
+      }
     });
   </script>
 </body>
