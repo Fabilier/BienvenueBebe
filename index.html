@@ -48,6 +48,9 @@
       width: 300px;
       height: 200px;
       perspective: 1000px;
+      display: flex; /* Ajout pour centrage */
+      justify-content: center; /* Centrage horizontal */
+      align-items: center; /* Centrage vertical */
     }
     .envelope-back {
       position: absolute;
@@ -98,6 +101,7 @@
       font-weight: bold;
       opacity: 0;
       transition: opacity 0.3s ease;
+      width: 100%; /* Assure que le texte reste dans les limites */
     }
     .envelope-text.active {
       opacity: 1;
