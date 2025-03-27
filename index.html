@@ -23,11 +23,10 @@
       position: relative;
     }
 
-    /* Étoiles visuelles (vraies étoiles ✨) */
+    /* Éléments du fond animés */
     .star {
       position: absolute;
       font-size: 1.2em;
-      color: #fff;
       opacity: 0;
       animation: twinkle 4s infinite;
       z-index: 0;
@@ -126,6 +125,9 @@
     .envelope-text.active {
       opacity: 1;
     }
+    .envelope-text:first-child {
+      opacity: 1;
+    }
 
     /* Carte */
     .card {
@@ -205,7 +207,7 @@
 </head>
 <body>
 
-  <!-- Étoiles -->
+  <!-- Éléments du fond -->
   <div id="stars"></div>
 
   <!-- Enveloppe -->
@@ -215,8 +217,8 @@
       <div class="envelope-flap"></div>
       <div class="envelope-front" id="envelopeFront"></div>
 
-      <!-- Étapes personnalisées -->
-      <div class="envelope-text">Jennifer et Fabien</div>
+      <!-- Étapes -->
+      <div class="envelope-text active">Jennifer et Fabien</div>
       <div class="envelope-text">Vous annoncent une merveilleuse nouvelle...</div>
       <div class="envelope-text">Le plus beau jour de notre vie est arrivé...</div>
       <div class="envelope-text">Un petit ange est né ♥</div>
@@ -248,18 +250,17 @@
     const envelopeFront = document.getElementById('envelopeFront');
     let clickCount = 0;
 
-    // Affichage progressif des phrases
     function showStep(index) {
       steps.forEach((el, i) => el.classList.toggle('active', i === index));
     }
 
-    // Animation étoiles ✨
-    function generateStars(count = 40) {
+    function generateStars(count = 50) {
+      const emojis = ["✨", "🍼", "👣", "🧸", "🎀", "💖", "👶"];
       const container = document.getElementById('stars');
       for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
-        star.textContent = '✨';
+        star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         star.style.top = `${Math.random() * 100}%`;
         star.style.left = `${Math.random() * 100}%`;
         star.style.animationDelay = `${Math.random() * 4}s`;
@@ -270,15 +271,13 @@
     envelope.addEventListener('click', () => {
       clickCount++;
 
-      if (clickCount === 1) return;
+      const stepIndex = clickCount;
 
-      const stepIndex = clickCount - 2;
-
-      if (stepIndex >= 0 && stepIndex < steps.length) {
+      if (stepIndex > 0 && stepIndex < steps.length) {
         showStep(stepIndex);
       }
 
-      if (clickCount === steps.length + 1) {
+      if (clickCount === steps.length) {
         setTimeout(() => {
           envelope.classList.add('open');
           setTimeout(() => {
